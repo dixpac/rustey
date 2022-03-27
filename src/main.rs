@@ -8,8 +8,8 @@ struct Server {
 }
 
 impl Server {
-    fn new(address: String) -> Server {
-        Server {
+    fn new(address: String) -> Self {
+        Self {
             address
         }
     }
