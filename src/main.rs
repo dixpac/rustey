@@ -1,5 +1,5 @@
 fn main() {
-    let server = Server::new("127.0.0.1:3131");
+    let server = Server::new("127.0.0.1:3131".to_string());
     server.run();
 }
 
@@ -12,5 +12,9 @@ impl Server {
         Self {
             address
         }
+    }
+
+    fn run(self) {
+        println!("Listening on {}", self.address);
     }
 }
