@@ -18,3 +18,21 @@ impl Server {
         println!("Listening on {}", self.address);
     }
 }
+
+struct Request {
+    path: String,
+    query_string: String,
+    method: Method,
+}
+
+enum Method {
+    GET,
+    POST,
+    PUT,
+    PATCH,
+    DELETE,
+    HEAD,
+    CONNECT,
+    OPTIONS,
+    TRACE,
+}
