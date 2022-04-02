@@ -26,14 +26,18 @@ impl Server {
                         Ok(_) => {
                             println!("Received request: {}", String::from_utf8_lossy(&buffer));
 
-                            match Request::try_from(&buffer[..]) {
+                            let response = match Request::try_from(&buffer[..]) {
                                 Ok(request) => {
                                     dbg!(request);
-
-                                    let response = Response::new(Status::Ok, Some("<h1>Hello</h1>".to_string()));
-                                    response.send(&mut socket);
+                                    Response::new(Status::Ok, Some("<h1>Hello</h1>".to_string()))
                                 },
-                                Err(e) => println!("Failed to parse a request: {}", e),
+                                Err(e) => {
+                                    Response::new(Status::BadRequest, None)
+                                }
+                            };
+                            
+                            if let Err(e) = response.send(&mut socket) {
+                                println!("Failed to send response: {}", e);
                             }
                         },
                         Err(e) => println!("Failed to read from connection {}", e),
