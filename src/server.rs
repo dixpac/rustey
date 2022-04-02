@@ -1,6 +1,6 @@
-use std::io::Read;
+use std::io::{Read, Write};
 use std::convert::TryFrom;
-use crate::http::Request;
+use crate::http::{Request, Response, Status};
 use std::net::TcpListener;
 
 pub struct Server {
@@ -29,6 +29,8 @@ impl Server {
                             match Request::try_from(&buffer[..]) {
                                 Ok(request) => {
                                     dbg!(request);
+                                    let response = Response::new(Status::NotFound, None);
+                                    write!(socket, "{}", response);
                                 },
                                 Err(e) => println!("Failed to parse a request: {}", e),
                             }
