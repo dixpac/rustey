@@ -5,10 +5,12 @@ use std::str::Utf8Error;
 use std::convert::From;
 use std::convert::TryFrom;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
+use super::query_string::{QueryString};
 
+#[derive(Debug)]
 pub struct Request<'buff> {
     path: &'buff str,
-    query_string: Option<&'buff str>,
+    query_string: Option<QueryString<'buff>>,
     method: Method,
 }
 
@@ -22,7 +24,7 @@ impl<'buff> TryFrom<&'buff [u8]> for Request<'buff> {
         let (mut path, request) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
         let (protocol, _) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
 
-        if protocol != "HTTP/1.1 " {
+        if protocol != "HTTP/1.1" {
             return Err(ParseError::InvalidProtocol);
         }
 
@@ -30,7 +32,7 @@ impl<'buff> TryFrom<&'buff [u8]> for Request<'buff> {
         
         let mut query_string = None;
         if let Some(i) = path.find('?') {
-            query_string = Some(&path[i + 1..]);
+            query_string = Some(QueryString::from(&path[i + 1..]));
             path = &path[..i];
         }
 
