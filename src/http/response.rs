@@ -1,5 +1,6 @@
 use super::Status;
-use std::fmt::{Display, Formatter, Result};
+use std::net::TcpStream;
+use std::io::{Write, Result as IoResult};
 
 #[derive(Debug)]
 pub struct Response {
@@ -15,17 +16,14 @@ impl Response {
         }
     }
 
-}
-
-impl Display for Response {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    pub fn send(&self, socket: &mut TcpStream) -> IoResult<()> {
         let body = match &self.body {
             Some(content) => content,
             None => "",
         };
 
         write!(
-            f,
+            socket,
             "HTTP/1.1 {} {}\r\n\r\n{}",
             self.status,
             self.status.reason(),

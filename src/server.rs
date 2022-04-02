@@ -30,7 +30,7 @@ impl Server {
                                 Ok(request) => {
                                     dbg!(request);
                                     let response = Response::new(Status::NotFound, None);
-                                    write!(socket, "{}", response);
+                                    response.send(&mut socket);
                                 },
                                 Err(e) => println!("Failed to parse a request: {}", e),
                             }
