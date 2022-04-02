@@ -29,7 +29,8 @@ impl Server {
                             match Request::try_from(&buffer[..]) {
                                 Ok(request) => {
                                     dbg!(request);
-                                    let response = Response::new(Status::NotFound, None);
+
+                                    let response = Response::new(Status::Ok, Some("<h1>Hello</h1>".to_string()));
                                     response.send(&mut socket);
                                 },
                                 Err(e) => println!("Failed to parse a request: {}", e),
